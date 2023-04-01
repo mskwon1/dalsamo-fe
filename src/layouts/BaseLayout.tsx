@@ -35,18 +35,19 @@ const BaseLayout = () => {
               marginBottom: 4,
             }}
           >
-            <Link to="/">
-              <img
-                src={dalsamoLogo}
-                style={{ width: '100%', height: '100%' }}
-              />
-            </Link>
+            <img src={dalsamoLogo} style={{ width: '100%', height: '100%' }} />
           </div>
           <Menu items={MENU_ITEMS} style={{ flexGrow: 1 }} />
         </div>
       </Layout.Sider>
       <Layout.Content>
-        <div style={{ height: '100vh', background: colorBgContainer }}>
+        <div
+          style={{
+            height: '100vh',
+            background: colorBgContainer,
+            padding: 8,
+          }}
+        >
           <Outlet />
         </div>
       </Layout.Content>
