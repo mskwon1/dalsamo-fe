@@ -1,6 +1,16 @@
 import { useParams } from 'react-router-dom';
 import useWeeklyReport from '../hooks/useWeeklyReport';
-import { Button, Col, Descriptions, Input, Row, Skeleton, Table } from 'antd';
+import {
+  Button,
+  Col,
+  Descriptions,
+  Input,
+  Row,
+  Skeleton,
+  Space,
+  Table,
+  Upload,
+} from 'antd';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useMemo } from 'react';
@@ -8,9 +18,10 @@ import WeeklyReportTag from '../components/WeeklyReportTag';
 import { useState, useCallback } from 'react';
 import _ from 'lodash';
 import fp from 'lodash/fp';
-import { CheckCircleOutlined } from '@ant-design/icons';
-import { calculatePredictedFine } from '../utils';
+import { CheckCircleOutlined, UploadOutlined } from '@ant-design/icons';
+import { calculatePredictedFine, parseRundayImage } from '../utils';
 import ApiRequester from '../libs/api-requester';
+import { createWorker } from 'tesseract.js';
 
 dayjs.extend(utc);
 
@@ -140,14 +151,87 @@ const PendingReportPage = (props: {
               alignItems: 'middle',
             }}
           >
-            <Button
-              type="primary"
-              icon={<CheckCircleOutlined />}
-              onClick={onClickSubmit}
-            >
-              결산 완료하기
-            </Button>
+            <Space>
+              <Upload
+                accept="image/*"
+                showUploadList={false}
+                beforeUpload={async (file) => {
+                  const worker = await createWorker();
+
+                  const test = await parseRundayImage(worker, file);
+                  console.log(test);
+
+                  return false;
+                }}
+                maxCount={1}
+              >
+                <Button icon={<UploadOutlined />}>캡쳐파일 업로드</Button>
+              </Upload>
+              <Button
+                type="primary"
+                icon={<CheckCircleOutlined />}
+                onClick={onClickSubmit}
+              >
+                결산 완료하기
+              </Button>
+            </Space>
           </div>
+        </Col>
+      </Row>
+    </div>
+  );
+};
+
+const ConfirmedReportPage = (props: {
+  weeklyReport: ComposedWeeklyReportEntity;
+}) => {
+  const {
+    weeklyReport: { id, startDate, status, runEntries },
+  } = props;
+
+  const titleString = useMemo(() => {
+    const start = dayjs.utc(startDate).format('YYYY년 M월 D일');
+    const end = dayjs.utc(startDate).add(6, 'day').format('YYYY년 M월 D일');
+
+    return `${start} ~ ${end} 주간기록`;
+  }, [startDate]);
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <h1>{titleString}</h1>
+      <Row gutter={8}>
+        <Col
+          xs={24}
+          md={16}
+          style={{ display: 'flex', flexDirection: 'column', gap: 8 }}
+        >
+          <Descriptions size="small" layout="vertical" bordered column={4}>
+            <Descriptions.Item label="시작 기준일" span={3}>
+              {dayjs.utc(startDate).format('YYYY년 M월 D일')}
+            </Descriptions.Item>
+            <Descriptions.Item label="상태" span={1}>
+              <WeeklyReportTag status={status} />
+            </Descriptions.Item>
+          </Descriptions>
+          <Table
+            size="small"
+            bordered
+            dataSource={runEntries}
+            columns={[
+              { title: '회원명', dataIndex: 'userName', key: 'userName' },
+              {
+                title: '달린거리',
+                dataIndex: 'runDistance',
+                width: 150,
+              },
+              {
+                title: '목표거리',
+                dataIndex: 'goalDistance',
+              },
+            ]}
+            rowKey="id"
+            pagination={false}
+          />
         </Col>
       </Row>
     </div>
@@ -182,7 +266,7 @@ const WeeklyReportDetailPage = () => {
     return <PendingReportPage weeklyReport={weeklyReport} />;
   }
 
-  return null;
+  return <ConfirmedReportPage weeklyReport={weeklyReport} />;
 };
 
 export default WeeklyReportDetailPage;
