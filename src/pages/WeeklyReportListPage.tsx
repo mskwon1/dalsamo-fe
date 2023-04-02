@@ -2,6 +2,7 @@ import { Col, List, Row } from 'antd';
 import useWeeklyReports from '../hooks/useWeeklyReports';
 import { Link } from 'react-router-dom';
 import WeeklyReportTag from '../components/WeeklyReportTag';
+import _ from 'lodash';
 
 const WeeklyReportListPage = () => {
   const { data: weeklyReports, isLoading } = useWeeklyReports();
@@ -15,7 +16,7 @@ const WeeklyReportListPage = () => {
             size="small"
             itemLayout="horizontal"
             bordered
-            dataSource={weeklyReports}
+            dataSource={_.orderBy(weeklyReports, ['startDate'], ['desc'])}
             loading={isLoading}
             renderItem={(weeklyReport) => {
               const { id, startDate, status } = weeklyReport;
