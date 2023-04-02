@@ -43,8 +43,6 @@ const BaseLayout = () => {
       }
     }
 
-    console.log(matchedIndexes);
-
     return matchedIndexes;
   }, [pathname]);
 
