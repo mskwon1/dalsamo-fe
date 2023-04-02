@@ -1,25 +1,52 @@
 import { Layout, Menu, theme } from 'antd';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import dalsamoLogo from '../images/dalsamo.png';
 import { BarsOutlined, FileAddOutlined } from '@ant-design/icons';
+import { useMemo } from 'react';
 
-const MENU_ITEMS = [
+const MENU_ROUTES = [
   {
     key: '1',
     icon: <BarsOutlined />,
-    label: <Link to="/weekly-reports">주간기록 열람</Link>,
+    title: '주간기록 열람',
+    pathname: '/weekly-reports',
   },
   {
     key: '2',
     icon: <FileAddOutlined />,
-    label: <Link to="/weekly-reports/new">주간기록 생성</Link>,
+    title: '주간기록 생성',
+    pathname: '/weekly-reports/new',
   },
 ];
+
+const MENU_ITEMS = MENU_ROUTES.map(({ key, icon, title, pathname }) => {
+  return {
+    key,
+    icon,
+    label: <Link to={pathname}>{title}</Link>,
+  };
+});
 
 const BaseLayout = () => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  const { pathname } = useLocation();
+
+  const selectedKeys = useMemo(() => {
+    const matchedIndexes = [];
+
+    for (const route of MENU_ROUTES) {
+      if (pathname === route.pathname) {
+        matchedIndexes.push(route.key);
+      }
+    }
+
+    console.log(matchedIndexes);
+
+    return matchedIndexes;
+  }, [pathname]);
 
   return (
     <Layout hasSider={true}>
@@ -35,9 +62,18 @@ const BaseLayout = () => {
               marginBottom: 4,
             }}
           >
-            <img src={dalsamoLogo} style={{ width: '100%', height: '100%' }} />
+            <Link to="/">
+              <img
+                src={dalsamoLogo}
+                style={{ width: '100%', height: '100%' }}
+              />
+            </Link>
           </div>
-          <Menu items={MENU_ITEMS} style={{ flexGrow: 1 }} />
+          <Menu
+            items={MENU_ITEMS}
+            style={{ flexGrow: 1 }}
+            selectedKeys={selectedKeys}
+          />
         </div>
       </Layout.Sider>
       <Layout.Content>
