@@ -35,7 +35,7 @@ const CreateWeeklyReportPage = () => {
       runEntries: selectedRows.map((user) => {
         return {
           userId: user.id,
-          name: user.name,
+          userName: user.name,
           goalDistance: user.currentGoal,
         };
       }),
