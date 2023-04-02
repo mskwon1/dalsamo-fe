@@ -7,6 +7,7 @@ import Root from './Root';
 import ErrorPage from './pages/ErrorPage';
 import CreateWeeklyReportPage from './pages/CreateWeeklyReportPage';
 import WeeklyReportListPage from './pages/WeeklyReportListPage';
+import WeeklyReportDetailPage from './pages/WeeklyReportDetailPage';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -25,6 +26,14 @@ const router = createBrowserRouter([
       {
         path: 'weekly-reports/new',
         element: <CreateWeeklyReportPage />,
+      },
+      {
+        path: 'weekly-reports/:weeklyReportId',
+        element: <WeeklyReportDetailPage />,
+      },
+      {
+        path: 'weekly-reports/:weeklyReportId/close',
+        element: <WeeklyReportDetailPage />,
       },
     ],
   },
