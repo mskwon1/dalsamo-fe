@@ -55,8 +55,6 @@ export const parseRundayImage = async (
     text.replaceAll('km', '')
   );
 
-  await worker.terminate();
-
   return _.map(userNames, (rawName, index) => {
     return {
       rawName,
@@ -80,4 +78,8 @@ export const getWeeklyReportTitle = (startDate: string) => {
   const end = dayjs.utc(startDate).add(6, 'day').format('YYYY년 M월 D일');
 
   return `${start} ~ ${end} 주간기록`;
+};
+
+export const formatDateString = (dateString: string) => {
+  return dayjs.utc(dateString).format('YYYY년 M월 D일');
 };

@@ -2,18 +2,16 @@ import { Table, Button, DatePicker, Form, Row, Col } from 'antd';
 import useUsers from '../hooks/useUsers';
 import { useCallback, useMemo, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import ApiRequester from '../libs/api-requester';
-
-const requestCreateWeeklyReport = (params: {
-  startDate: string;
-  runEntries: { userId: string; goalDistance: number }[];
-}) => ApiRequester.post('/weekly-reports', params);
+import weeklyReportApi from '../api/weekly-report-api';
+import { useNavigate } from 'react-router-dom';
 
 const CreateWeeklyReportPage = () => {
   const { data: users } = useUsers();
 
   const [startDate, setStartDate] = useState<string>('');
   const [selectedRows, setSelectedRows] = useState<UserEntity[]>([]);
+
+  const navigate = useNavigate();
 
   const isSubmittable = useMemo(() => {
     if (!startDate) {
@@ -27,10 +25,8 @@ const CreateWeeklyReportPage = () => {
     return true;
   }, [startDate, selectedRows]);
 
-  const onClickSubmit = useCallback(() => {
-    console.log({ startDate, selectedRows });
-
-    requestCreateWeeklyReport({
+  const onClickSubmit = useCallback(async () => {
+    const weeklyReportId = await weeklyReportApi.requestOpenWeeklyReport({
       startDate,
       runEntries: selectedRows.map((user) => {
         return {
@@ -39,10 +35,10 @@ const CreateWeeklyReportPage = () => {
           goalDistance: user.currentGoal,
         };
       }),
-    })
-      .then(console.log)
-      .catch(console.error);
-  }, [startDate, selectedRows]);
+    });
+
+    navigate(`/weekly-reports/${weeklyReportId}`);
+  }, [startDate, selectedRows, navigate]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
