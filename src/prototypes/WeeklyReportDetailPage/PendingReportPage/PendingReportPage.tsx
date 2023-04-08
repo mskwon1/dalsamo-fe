@@ -8,7 +8,7 @@ import ImagePreviewSection from './ImagePreviewSection';
 import { Button, Col, Row, Space, Upload, notification } from 'antd';
 import RunEntriesSection from './RunEntriesFormSection';
 import BasicInfoSection from './BasicInfoSection';
-import { calculatePredictedFine, getWeeklyReportTitle } from 'utils';
+import { calculatePredictedFine, getWeeklyReportTitle } from 'src/utils';
 import { useCallback, useState } from 'react';
 import levenshtein from 'js-levenshtein';
 import _ from 'lodash';

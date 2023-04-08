@@ -1,10 +1,8 @@
-import { Button, Col, Image, Row, Space, Table, Typography } from 'antd';
-import { getWeeklyReportTitle } from '../../utils';
+import { Button, Col, Image, Row, Table, Typography } from 'antd';
 import BasicInfoSection from './PendingReportPage/BasicInfoSection';
 import { useMemo, useRef } from 'react';
 import { find, map, maxBy, orderBy } from 'lodash';
 import {
-  ArrowUpOutlined,
   CaretUpFilled,
   CrownFilled,
   DownloadOutlined,
@@ -13,8 +11,7 @@ import {
 } from '@ant-design/icons';
 import { useCallback } from 'react';
 import html2canvas from 'html2canvas';
-import { MAX_DISTANCE } from 'constants';
-import { report } from 'process';
+import { MAX_DISTANCE } from 'src/constants';
 
 const ConfirmedReportPage = (props: {
   weeklyReport: ComposedWeeklyReportEntity;
