@@ -7,7 +7,6 @@ import {
   CrownFilled,
   DownloadOutlined,
   LineOutlined,
-  RocketFilled,
 } from '@ant-design/icons';
 import { useCallback } from 'react';
 import html2canvas from 'html2canvas';
@@ -131,9 +130,7 @@ const ConfirmedReportPage = (props: {
                       return (
                         <span>
                           {goalDistance}
-                          <RocketFilled
-                            style={{ marginLeft: 4, color: 'green' }}
-                          />
+                          <span style={{ marginLeft: 4 }}>😏</span>
                         </span>
                       );
                     }
