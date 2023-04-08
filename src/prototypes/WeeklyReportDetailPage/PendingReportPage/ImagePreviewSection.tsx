@@ -2,7 +2,7 @@ import { CloseOutlined } from '@ant-design/icons';
 import { Button, Image, Space } from 'antd';
 
 const ImagePreviewSection = (props: {
-  base64ImageUrl: string | null;
+  base64ImageUrl?: string;
   onRemove: () => void;
 }) => {
   const { base64ImageUrl, onRemove } = props;

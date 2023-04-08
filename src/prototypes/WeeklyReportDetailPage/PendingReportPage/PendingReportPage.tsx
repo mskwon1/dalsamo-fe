@@ -40,6 +40,7 @@ const PendingReportPage = (props: {
   );
 
   const [isAnalyzingCapture, setIsAnlalyzingCapture] = useState(false);
+  const [base64Image, setBase64Image] = useState<string | undefined>();
 
   const setRunDistance = useCallback((id: string, value: number) => {
     setEditableRunEntries((prevEntries) => {
@@ -97,12 +98,13 @@ const PendingReportPage = (props: {
         editableRunEntries,
         fp.pick(['id', 'runDistance', 'goalDistance', 'userId', 'userName'])
       ),
+      base64Image,
     });
 
     console.log({ success });
 
     navigate(`/weekly-reports/${id}`);
-  }, [id, editableRunEntries, navigate]);
+  }, [id, editableRunEntries, navigate, base64Image]);
 
   const parseAndAnalyzeCaptureImage = useCallback(async (file: RcFile) => {
     try {
@@ -111,7 +113,7 @@ const PendingReportPage = (props: {
       // Set preview image
       const reader = new FileReader();
       reader.onload = (e) => {
-        setImageBase64(e.target?.result as string);
+        setBase64Image(e.target?.result as string);
       };
       reader.readAsDataURL(file);
 
@@ -177,8 +179,6 @@ const PendingReportPage = (props: {
     }
   }, []);
 
-  const [imageBase64, setImageBase64] = useState<string | null>(null);
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
       <h1>{getWeeklyReportTitle(startDate)}</h1>
@@ -231,8 +231,8 @@ const PendingReportPage = (props: {
             </Space.Compact>
           </div>
           <ImagePreviewSection
-            base64ImageUrl={imageBase64}
-            onRemove={() => setImageBase64('')}
+            base64ImageUrl={base64Image}
+            onRemove={() => setBase64Image(undefined)}
           />
         </Col>
       </Row>

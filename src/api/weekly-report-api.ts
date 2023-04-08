@@ -16,13 +16,13 @@ const requestOpenWeeklyReport = async (params: {
 
 const requestCloseWeeklyReport = async (
   weeklyReportId: string,
-  params: { runEntries: RunEntryEntity[] }
+  params: { runEntries: RunEntryEntity[]; base64Image?: string }
 ) => {
   const {
     data: { result },
   } = await ApiRequester.post<{ result: boolean }>(
     `/weekly-reports/${weeklyReportId}/close`,
-    { runEntries: params.runEntries }
+    params
   );
 
   return result;
