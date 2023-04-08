@@ -5,7 +5,7 @@ import WeeklyReportTag from '../components/WeeklyReportTag';
 import _ from 'lodash';
 
 const WeeklyReportListPage = () => {
-  const { data: weeklyReports, isLoading } = useWeeklyReports();
+  const { data: weeklyReports, isLoading } = useWeeklyReports({ limit: 50 });
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>

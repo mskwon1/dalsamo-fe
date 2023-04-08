@@ -1,7 +1,7 @@
 import { Col, Descriptions, Row, Table } from 'antd';
-import { formatDateString, getWeeklyReportTitle } from '../../../utils';
-import WeeklyReportTag from '../../../components/WeeklyReportTag';
-import BasicInfoSection from './BasicInfoSection';
+import { formatDateString, getWeeklyReportTitle } from '../../utils';
+import WeeklyReportTag from '../../components/WeeklyReportTag';
+import BasicInfoSection from './PendingReportPage/BasicInfoSection';
 
 const ConfirmedReportPage = (props: {
   weeklyReport: ComposedWeeklyReportEntity;

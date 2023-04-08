@@ -8,24 +8,21 @@ import ImagePreviewSection from './ImagePreviewSection';
 import { Button, Col, Row, Space, Upload, notification } from 'antd';
 import RunEntriesSection from './RunEntriesFormSection';
 import BasicInfoSection from './BasicInfoSection';
-import { calculatePredictedFine, getWeeklyReportTitle } from '../../../utils';
+import { calculatePredictedFine, getWeeklyReportTitle } from 'utils';
 import { useCallback, useState } from 'react';
 import levenshtein from 'js-levenshtein';
-import weeklyReportApi from '../../../api/weekly-report-api';
 import _ from 'lodash';
 import fp from 'lodash/fp';
-import { useNavigate } from 'react-router-dom';
-import utilApi from '../../../api/util-api';
+import utilApi from '@api/util-api';
 import { RcFile } from 'antd/es/upload';
+import useCloseWeeklyReport from '@hooks/useCloseWeeklyReport';
 
 const PendingReportPage = (props: {
   weeklyReport: ComposedWeeklyReportEntity;
 }) => {
   const { weeklyReport } = props;
 
-  const { id, startDate, status, runEntries } = weeklyReport;
-
-  const navigate = useNavigate();
+  const { id, startDate, runEntries } = weeklyReport;
 
   const [editableRunEntries, setEditableRunEntries] = useState(() =>
     _.map(runEntries, (entry) => {
@@ -41,6 +38,7 @@ const PendingReportPage = (props: {
 
   const [isAnalyzingCapture, setIsAnlalyzingCapture] = useState(false);
   const [base64Image, setBase64Image] = useState<string | undefined>();
+  const [api, contextHolder] = notification.useNotification();
 
   const setRunDistance = useCallback((id: string, value: number) => {
     setEditableRunEntries((prevEntries) => {
@@ -90,153 +88,157 @@ const PendingReportPage = (props: {
     });
   }, []);
 
+  const closeWeeklyReportMutation = useCloseWeeklyReport(id);
   const onClickSubmit = useCallback(async () => {
-    console.log(editableRunEntries);
-
-    const success = await weeklyReportApi.requestCloseWeeklyReport(id, {
+    closeWeeklyReportMutation({
       runEntries: _.map(
         editableRunEntries,
         fp.pick(['id', 'runDistance', 'goalDistance', 'userId', 'userName'])
       ),
       base64Image,
     });
+  }, [id, editableRunEntries, base64Image]);
 
-    console.log({ success });
+  const parseAndAnalyzeCaptureImage = useCallback(
+    async (file: RcFile) => {
+      try {
+        setIsAnlalyzingCapture(true);
 
-    navigate(`/weekly-reports/${id}`);
-  }, [id, editableRunEntries, navigate, base64Image]);
+        // Set preview image
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setBase64Image(e.target?.result as string);
+        };
+        reader.readAsDataURL(file);
 
-  const parseAndAnalyzeCaptureImage = useCallback(async (file: RcFile) => {
-    try {
-      setIsAnlalyzingCapture(true);
+        const records = await utilApi.analyzeCaptureIamge(file);
 
-      // Set preview image
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setBase64Image(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
+        const updateTargetRecords: {
+          runEntryId: string;
+          userName: string;
+          distance: number;
+        }[] = [];
+        for (const record of records) {
+          const { rawName, distance } = record;
 
-      const records = await utilApi.analyzeCaptureIamge(file);
+          const targetEntry = _.minBy(editableRunEntries, ({ userName }) =>
+            levenshtein(rawName, userName.replaceAll(' ', ''))
+          );
 
-      const updateTargetRecords: {
-        runEntryId: string;
-        userName: string;
-        distance: number;
-      }[] = [];
-      for (const record of records) {
-        const { rawName, distance } = record;
-
-        const targetEntry = _.minBy(editableRunEntries, ({ userName }) =>
-          levenshtein(rawName, userName.replaceAll(' ', ''))
-        );
-
-        if (targetEntry) {
-          updateTargetRecords.push({
-            runEntryId: targetEntry.id,
-            userName: targetEntry.userName,
-            distance,
-          });
+          if (targetEntry) {
+            updateTargetRecords.push({
+              runEntryId: targetEntry.id,
+              userName: targetEntry.userName,
+              distance,
+            });
+          }
         }
-      }
-      console.log(updateTargetRecords);
 
-      notification.open({
-        message: '캡쳐기록 추가 확인',
-        description: (
-          <div>
-            <p style={{ whiteSpace: 'pre-line' }}>
-              {_.join(
-                _.map(updateTargetRecords, ({ userName, distance }) => {
-                  return `${userName} - ${distance}KM 추가`;
-                }),
-                '\n'
-              )}
-            </p>
-            <div style={{ display: 'flex', justifyContent: 'end' }}>
-              <Button
-                type="primary"
-                icon={<CheckCircleOutlined />}
-                onClick={() => {
-                  _.each(updateTargetRecords, ({ runEntryId, distance }) => {
-                    addRunDistance(runEntryId, distance);
-                  });
-                }}
-              >
-                확인
-              </Button>
+        const key = `open${Date.now().valueOf()}`;
+
+        api.open({
+          key,
+          message: '캡쳐기록 추가 확인',
+          description: (
+            <div>
+              <p style={{ whiteSpace: 'pre-line' }}>
+                {_.join(
+                  _.map(updateTargetRecords, ({ userName, distance }) => {
+                    return `${userName} - ${distance}km`;
+                  }),
+                  '\n'
+                )}
+              </p>
             </div>
-          </div>
-        ),
-        duration: 0,
-        icon: <RocketFilled style={{ color: 'green' }} />,
-      });
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setIsAnlalyzingCapture(false);
-      return false;
-    }
-  }, []);
+          ),
+          btn: (
+            <Button
+              type="primary"
+              icon={<CheckCircleOutlined />}
+              onClick={() => {
+                _.each(updateTargetRecords, ({ runEntryId, distance }) => {
+                  addRunDistance(runEntryId, distance);
+                });
+                api.destroy(key);
+              }}
+            >
+              확인
+            </Button>
+          ),
+          duration: 0,
+          icon: <RocketFilled style={{ color: 'green' }} />,
+        });
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setIsAnlalyzingCapture(false);
+        return false;
+      }
+    },
+    [api]
+  );
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-      <h1>{getWeeklyReportTitle(startDate)}</h1>
-      <Row gutter={8}>
-        <Col
-          xs={24}
-          md={16}
-          style={{ display: 'flex', flexDirection: 'column', gap: 8 }}
-        >
-          <BasicInfoSection weeklyReport={weeklyReport} />
-          <RunEntriesSection
-            runEntries={editableRunEntries}
-            onRunDistanceChange={setRunDistance}
-          />
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'end',
-              alignItems: 'middle',
-            }}
+    <>
+      {contextHolder}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <h1>{getWeeklyReportTitle(startDate)}</h1>
+        <Row gutter={8}>
+          <Col
+            xs={24}
+            md={16}
+            style={{ display: 'flex', flexDirection: 'column', gap: 8 }}
           >
-            <Space.Compact>
-              <Upload
-                accept="image/*"
-                disabled={isAnalyzingCapture}
-                beforeUpload={parseAndAnalyzeCaptureImage}
-                maxCount={1}
-                showUploadList={false}
-              >
-                <Button
+            <BasicInfoSection weeklyReport={weeklyReport} />
+            <RunEntriesSection
+              runEntries={editableRunEntries}
+              onRunDistanceChange={setRunDistance}
+            />
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'end',
+                alignItems: 'middle',
+              }}
+            >
+              <Space.Compact>
+                <Upload
+                  accept="image/*"
                   disabled={isAnalyzingCapture}
-                  icon={
-                    isAnalyzingCapture ? (
-                      <LoadingOutlined />
-                    ) : (
-                      <UploadOutlined />
-                    )
-                  }
+                  beforeUpload={parseAndAnalyzeCaptureImage}
+                  maxCount={1}
+                  showUploadList={false}
                 >
-                  캡쳐 업로드/기록적용
+                  <Button
+                    disabled={isAnalyzingCapture}
+                    icon={
+                      isAnalyzingCapture ? (
+                        <LoadingOutlined />
+                      ) : (
+                        <UploadOutlined />
+                      )
+                    }
+                  >
+                    캡쳐 업로드/기록적용
+                  </Button>
+                </Upload>
+                <Button
+                  type="primary"
+                  icon={<CheckCircleOutlined />}
+                  onClick={onClickSubmit}
+                >
+                  결산 완료
                 </Button>
-              </Upload>
-              <Button
-                type="primary"
-                icon={<CheckCircleOutlined />}
-                onClick={onClickSubmit}
-              >
-                결산 완료
-              </Button>
-            </Space.Compact>
-          </div>
-          <ImagePreviewSection
-            base64ImageUrl={base64Image}
-            onRemove={() => setBase64Image(undefined)}
-          />
-        </Col>
-      </Row>
-    </div>
+              </Space.Compact>
+            </div>
+            <ImagePreviewSection
+              base64ImageUrl={base64Image}
+              onRemove={() => setBase64Image(undefined)}
+            />
+          </Col>
+        </Row>
+      </div>
+    </>
   );
 };
 

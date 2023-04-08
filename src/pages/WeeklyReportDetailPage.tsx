@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import useWeeklyReport from '../hooks/useWeeklyReport';
 import { Col, Row, Skeleton } from 'antd';
 import PendingReportPage from '../prototypes/WeeklyReportDetailPage/PendingReportPage/PendingReportPage';
-import ConfirmedReportPage from '../prototypes/WeeklyReportDetailPage/PendingReportPage/ConfirmedReportPage';
+import ConfirmedReportPage from '../prototypes/WeeklyReportDetailPage/ConfirmedReportPage';
 
 const WeeklyReportDetailPage = () => {
   const { weeklyReportId } = useParams();
