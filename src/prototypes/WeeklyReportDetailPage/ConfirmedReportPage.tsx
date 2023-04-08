@@ -1,9 +1,20 @@
-import { Col, Image, Row, Table, Typography } from 'antd';
+import { Button, Col, Image, Row, Space, Table, Typography } from 'antd';
 import { getWeeklyReportTitle } from '../../utils';
 import BasicInfoSection from './PendingReportPage/BasicInfoSection';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import { find, map, maxBy, orderBy } from 'lodash';
-import { CrownFilled } from '@ant-design/icons';
+import {
+  ArrowUpOutlined,
+  CaretUpFilled,
+  CrownFilled,
+  DownloadOutlined,
+  LineOutlined,
+  RocketFilled,
+} from '@ant-design/icons';
+import { useCallback } from 'react';
+import html2canvas from 'html2canvas';
+import { MAX_DISTANCE } from 'constants';
+import { report } from 'process';
 
 const ConfirmedReportPage = (props: {
   weeklyReport: ComposedWeeklyReportEntity;
@@ -12,15 +23,37 @@ const ConfirmedReportPage = (props: {
 
   const { startDate, runEntries, fines, reportImageUrl } = weeklyReport;
 
+  const canvasTargetRef = useRef<HTMLDivElement>(null);
+
+  const downloadAsImage = useCallback(async () => {
+    if (!canvasTargetRef.current) {
+      return;
+    }
+
+    const canvas = await html2canvas(canvasTargetRef.current);
+    const data = canvas.toDataURL('image/png', 1.0);
+
+    const fakeLink = document.createElement('a');
+
+    fakeLink.setAttribute('style', 'display:none;');
+    fakeLink.setAttribute('download', `dalsamo-${startDate}주차`);
+    fakeLink.setAttribute('href', data);
+
+    document.body.appendChild(fakeLink);
+    fakeLink.click();
+    document.body.removeChild(fakeLink);
+    fakeLink.remove();
+  }, [startDate]);
+
   const composedRunEntries = useMemo(() => {
-    const entriesWithFine = map(runEntries, (entry) => {
+    const composedEntries = map(runEntries, (entry) => {
       return {
         ...entry,
         fine: find(fines, { userId: entry.userId })?.value || 0,
       };
     });
 
-    return orderBy(entriesWithFine, ['fine'], ['desc']);
+    return orderBy(composedEntries, ['fine'], ['desc']);
   }, [runEntries, fines]);
 
   const weeklyKingUserId = useMemo(() => {
@@ -29,14 +62,14 @@ const ConfirmedReportPage = (props: {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-      <Typography.Title level={2}>
-        {getWeeklyReportTitle(startDate)}
-      </Typography.Title>
       <Row gutter={4}>
         <Col xs={24} md={20}>
-          <BasicInfoSection weeklyReport={weeklyReport} />
+          <div ref={canvasTargetRef} style={{ padding: 4 }}>
+            <Typography.Title level={4} style={{ marginTop: 0 }}>
+              기본 정보
+            </Typography.Title>
+            <BasicInfoSection weeklyReport={weeklyReport} />
 
-          <div>
             <Typography.Title level={4}>결산 결과</Typography.Title>
             <Table
               size="small"
@@ -70,8 +103,8 @@ const ConfirmedReportPage = (props: {
                       <span
                         style={
                           runDistance >= goalDistance
-                            ? { color: 'green' }
-                            : { color: 'red', fontWeight: 'bold' }
+                            ? {}
+                            : { color: 'blue', fontWeight: 'bold' }
                         }
                       >
                         {runDistance}
@@ -82,6 +115,41 @@ const ConfirmedReportPage = (props: {
                 {
                   title: '목표거리',
                   dataIndex: 'goalDistance',
+                },
+                {
+                  title: '다음목표',
+                  render: (val, { runDistance, goalDistance }) => {
+                    if (runDistance < goalDistance) {
+                      return (
+                        <span>
+                          {goalDistance}
+                          <LineOutlined
+                            style={{ marginLeft: 4, color: 'blue' }}
+                          />
+                        </span>
+                      );
+                    }
+
+                    if (goalDistance >= MAX_DISTANCE) {
+                      return (
+                        <span>
+                          {goalDistance}
+                          <RocketFilled
+                            style={{ marginLeft: 4, color: 'green' }}
+                          />
+                        </span>
+                      );
+                    }
+
+                    return (
+                      <span>
+                        {goalDistance + 1}
+                        <CaretUpFilled
+                          style={{ marginLeft: 4, color: 'red' }}
+                        />
+                      </span>
+                    );
+                  },
                 },
                 {
                   title: '벌금',
@@ -95,7 +163,22 @@ const ConfirmedReportPage = (props: {
               pagination={false}
             />
           </div>
-
+          <div
+            style={{
+              display: 'flex',
+              width: '100%',
+              justifyContent: 'end',
+              marginTop: 4,
+            }}
+          >
+            <Button
+              type="primary"
+              icon={<DownloadOutlined />}
+              onClick={downloadAsImage}
+            >
+              이미지로 다운로드
+            </Button>
+          </div>
           {reportImageUrl && (
             <>
               <Typography.Title level={4}>첨부 이미지</Typography.Title>

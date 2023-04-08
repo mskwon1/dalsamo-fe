@@ -11,7 +11,7 @@ const WeeklyReportListPage = () => {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
       <h1>주간기록 열람</h1>
       <Row>
-        <Col xs={24} md={12} lg={8}>
+        <Col xs={24} md={20} lg={16}>
           <List
             size="small"
             itemLayout="horizontal"
