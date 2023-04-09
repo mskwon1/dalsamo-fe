@@ -4,4 +4,5 @@ type UserEntity = {
   email: string | null;
   currentGoal: number;
   rundayTag: string | null;
+  roles: string[];
 };

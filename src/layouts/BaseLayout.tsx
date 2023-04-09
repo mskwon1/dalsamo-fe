@@ -3,6 +3,8 @@ import { Link, Outlet, useLocation } from 'react-router-dom';
 import dalsamoLogo from '../images/dalsamo.png';
 import { BarsOutlined, FileAddOutlined } from '@ant-design/icons';
 import { useMemo } from 'react';
+import useLoginUser from '@hooks/useLoginUser';
+import _ from 'lodash';
 
 const MENU_ROUTES = [
   {
@@ -10,20 +12,23 @@ const MENU_ROUTES = [
     icon: <BarsOutlined />,
     title: '주간기록 열람',
     pathname: '/weekly-reports',
+    roles: ['member', 'admin'],
   },
   {
     key: '2',
     icon: <FileAddOutlined />,
     title: '주간기록 생성',
     pathname: '/weekly-reports/new',
+    roles: ['admin'],
   },
 ];
 
-const MENU_ITEMS = MENU_ROUTES.map(({ key, icon, title, pathname }) => {
+const MENU_ITEMS = MENU_ROUTES.map(({ key, icon, title, pathname, roles }) => {
   return {
     key,
     icon,
     label: <Link to={pathname}>{title}</Link>,
+    roles,
   };
 });
 
@@ -33,6 +38,7 @@ const BaseLayout = () => {
   } = theme.useToken();
 
   const { pathname } = useLocation();
+  const { data: loginUser } = useLoginUser();
 
   const selectedKeys = useMemo(() => {
     const matchedIndexes = [];
@@ -45,6 +51,18 @@ const BaseLayout = () => {
 
     return matchedIndexes;
   }, [pathname]);
+
+  const filteredMenuItems = useMemo(() => {
+    if (!loginUser) {
+      return MENU_ITEMS;
+    }
+
+    return _.filter(MENU_ITEMS, ({ roles }) => {
+      console.log(roles, loginUser);
+
+      return !_.isEmpty(_.intersection(roles, loginUser.roles));
+    });
+  }, [loginUser]);
 
   return (
     <Layout hasSider={true}>
@@ -68,7 +86,7 @@ const BaseLayout = () => {
             </Link>
           </div>
           <Menu
-            items={MENU_ITEMS}
+            items={filteredMenuItems}
             style={{ flexGrow: 1 }}
             selectedKeys={selectedKeys}
           />

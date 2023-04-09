@@ -1,14 +1,11 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import BaseLayout from './layouts/BaseLayout';
-
-const queryClient = new QueryClient();
+import useLoginUser from './hooks/useLoginUser';
+import LoginPage from '@pages/LoginPage';
 
 function Root() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <BaseLayout />
-    </QueryClientProvider>
-  );
+  const { data: loginUser } = useLoginUser();
+
+  return loginUser ? <BaseLayout /> : <LoginPage />;
 }
 
 export default Root;

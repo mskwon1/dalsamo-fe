@@ -8,6 +8,11 @@ import ErrorPage from './pages/ErrorPage';
 import CreateWeeklyReportPage from './pages/CreateWeeklyReportPage';
 import WeeklyReportListPage from './pages/WeeklyReportListPage';
 import WeeklyReportDetailPage from './pages/WeeklyReportDetailPage';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import { RecoilRoot } from 'recoil';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -41,7 +46,13 @@ const router = createBrowserRouter([
 
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <RecoilRoot>
+      <QueryClientProvider client={queryClient}>
+        <GoogleOAuthProvider clientId="1078272982167-an324rb6h5v59b2fvnoq5n4a5ph2ijqf.apps.googleusercontent.com">
+          <RouterProvider router={router} />
+        </GoogleOAuthProvider>
+      </QueryClientProvider>
+    </RecoilRoot>
   </React.StrictMode>
 );
 

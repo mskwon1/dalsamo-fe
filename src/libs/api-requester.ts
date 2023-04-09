@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const ApiRequester = axios.create({
-  baseURL: 'https://dalsamo-api-dev.mskwon.click',
+  baseURL: process.env.REACT_APP_DALSAMO_BE_HOST,
   headers: {},
   timeout: 3000,
 });

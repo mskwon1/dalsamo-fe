@@ -4,3 +4,5 @@ export const WeeklyReportsQueryKey = (params: { limit: number }) => [
   'weekly-reports',
   params,
 ];
+
+export const LoginUserQueryKey = () => ['login-user'];
