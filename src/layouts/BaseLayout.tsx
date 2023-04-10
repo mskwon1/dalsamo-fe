@@ -69,10 +69,8 @@ const BaseLayout = () => {
     });
   }, [loginUser]);
 
-  const [collapse, setCollapse] = useState();
+  const [collapse, setCollapse] = useState(true);
   const { md } = Grid.useBreakpoint();
-
-  console.log({ md });
 
   return (
     <Layout hasSider={true}>
@@ -82,7 +80,7 @@ const BaseLayout = () => {
         trigger={null}
         collapsedWidth={0}
         collapsed={collapse}
-        onCollapse={setCollapse}
+        onCollapse={(value) => setCollapse(value)}
       >
         <div
           style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
@@ -128,7 +126,9 @@ const BaseLayout = () => {
             로그아웃
           </Button>
         </Layout.Header>
-        <Layout.Content style={{ background: colorBgContainer }}>
+        <Layout.Content
+          style={{ overflow: 'auto', background: colorBgContainer }}
+        >
           <Row>
             <Col
               xs={24}
@@ -136,7 +136,6 @@ const BaseLayout = () => {
               xl={18}
               xxl={16}
               style={{
-                height: '100vh',
                 background: colorBgContainer,
                 padding: 8,
               }}
