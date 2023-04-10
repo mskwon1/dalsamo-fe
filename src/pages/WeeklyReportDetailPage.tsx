@@ -14,14 +14,10 @@ const WeeklyReportDetailPage = () => {
   if (isLoading || !weeklyReport) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <Row>
-          <Col xs={24} md={16}>
-            <Skeleton
-              title={{ width: 200 }}
-              paragraph={{ rows: 6, width: [400, 400, 400, 400, 400, 400] }}
-            />
-          </Col>
-        </Row>
+        <Skeleton
+          title={{ width: 200 }}
+          paragraph={{ rows: 6, width: [400, 400, 400, 400, 400, 400] }}
+        />
       </div>
     );
   }

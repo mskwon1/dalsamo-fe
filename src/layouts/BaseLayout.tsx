@@ -1,4 +1,4 @@
-import { Layout, Menu, theme } from 'antd';
+import { Col, Layout, Menu, Row, theme } from 'antd';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import dalsamoLogo from '../images/dalsamo.png';
 import { BarsOutlined, FileAddOutlined } from '@ant-design/icons';
@@ -92,16 +92,22 @@ const BaseLayout = () => {
           />
         </div>
       </Layout.Sider>
-      <Layout.Content>
-        <div
-          style={{
-            height: '100vh',
-            background: colorBgContainer,
-            padding: 8,
-          }}
-        >
-          <Outlet />
-        </div>
+      <Layout.Content style={{ background: colorBgContainer }}>
+        <Row>
+          <Col
+            xs={24}
+            lg={20}
+            xl={18}
+            xxl={16}
+            style={{
+              height: '100vh',
+              background: colorBgContainer,
+              padding: 8,
+            }}
+          >
+            <Outlet />
+          </Col>
+        </Row>
       </Layout.Content>
     </Layout>
   );

@@ -1,4 +1,4 @@
-import { Col, List, Row } from 'antd';
+import { List } from 'antd';
 import useWeeklyReports from '../hooks/useWeeklyReports';
 import { Link } from 'react-router-dom';
 import WeeklyReportTag from '../components/WeeklyReportTag';
@@ -10,31 +10,27 @@ const WeeklyReportListPage = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
       <h1>주간기록 열람</h1>
-      <Row>
-        <Col xs={24} md={20} lg={16}>
-          <List
-            size="small"
-            itemLayout="horizontal"
-            bordered
-            dataSource={_.orderBy(weeklyReports, ['startDate'], ['desc'])}
-            loading={isLoading}
-            renderItem={(weeklyReport) => {
-              const { id, startDate, status } = weeklyReport;
+      <List
+        size="small"
+        itemLayout="horizontal"
+        bordered
+        dataSource={_.orderBy(weeklyReports, ['startDate'], ['desc'])}
+        loading={isLoading}
+        renderItem={(weeklyReport) => {
+          const { id, startDate, status } = weeklyReport;
 
-              return (
-                <>
-                  <List.Item key={id}>
-                    <div>
-                      <Link to={`/weekly-reports/${id}`}>{startDate}</Link>
-                    </div>
-                    <WeeklyReportTag status={status} />
-                  </List.Item>
-                </>
-              );
-            }}
-          />
-        </Col>
-      </Row>
+          return (
+            <>
+              <List.Item key={id}>
+                <div>
+                  <Link to={`/weekly-reports/${id}`}>{startDate}</Link>
+                </div>
+                <WeeklyReportTag status={status} />
+              </List.Item>
+            </>
+          );
+        }}
+      />
     </div>
   );
 };

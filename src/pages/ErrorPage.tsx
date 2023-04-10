@@ -1,5 +1,6 @@
 import { useRouteError } from 'react-router-dom';
 import { useEffect } from 'react';
+import { Result } from 'antd';
 
 const ErrorPage = () => {
   const error = useRouteError();
@@ -8,9 +9,19 @@ const ErrorPage = () => {
   }, [error]);
 
   return (
-    <div>
-      <h1>에러가 발생해부렸네요</h1>
-      <p>어쩔수없죠</p>
+    <div
+      style={{
+        display: 'flex',
+        height: '100vh',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <Result
+        status="404"
+        title="못지나갑니다"
+        subTitle="그런 페이지는 없답니다"
+      />
     </div>
   );
 };
