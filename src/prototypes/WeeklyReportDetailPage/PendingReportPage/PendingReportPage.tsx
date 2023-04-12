@@ -16,6 +16,7 @@ import fp from 'lodash/fp';
 import utilApi from '@api/util-api';
 import { RcFile } from 'antd/es/upload';
 import useCloseWeeklyReport from '@hooks/useCloseWeeklyReport';
+import useAuthToken from '@hooks/useAuthToken';
 
 const PendingReportPage = (props: {
   weeklyReport: ComposedWeeklyReportEntity;
@@ -88,6 +89,7 @@ const PendingReportPage = (props: {
     });
   }, []);
 
+  const { authToken } = useAuthToken();
   const closeWeeklyReportMutation = useCloseWeeklyReport(id);
   const onClickSubmit = useCallback(async () => {
     closeWeeklyReportMutation({
@@ -102,6 +104,10 @@ const PendingReportPage = (props: {
   const parseAndAnalyzeCaptureImage = useCallback(
     async (file: RcFile) => {
       try {
+        if (!authToken) {
+          return false;
+        }
+
         setIsAnlalyzingCapture(true);
 
         // Set preview image
@@ -111,7 +117,7 @@ const PendingReportPage = (props: {
         };
         reader.readAsDataURL(file);
 
-        const records = await utilApi.analyzeCaptureIamge(file);
+        const records = await utilApi.analyzeCaptureIamge(file, authToken);
 
         const updateTargetRecords: {
           runEntryId: string;
@@ -175,7 +181,7 @@ const PendingReportPage = (props: {
         return false;
       }
     },
-    [api]
+    [api, authToken]
   );
 
   return (

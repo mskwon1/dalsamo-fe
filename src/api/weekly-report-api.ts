@@ -1,14 +1,19 @@
+import createAuthHeader from 'src/libs/create-auth-header';
 import ApiRequester from '../libs/api-requester';
 
-const requestOpenWeeklyReport = async (params: {
-  startDate: string;
-  runEntries: { userId: string; goalDistance: number }[];
-}) => {
+const requestOpenWeeklyReport = async (
+  params: {
+    startDate: string;
+    runEntries: { userId: string; goalDistance: number }[];
+  },
+  token: string
+) => {
   const {
     data: { createdId },
   } = await ApiRequester.post<{ createdId: string }>(
     '/weekly-reports/open',
-    params
+    params,
+    { headers: createAuthHeader(token) }
   );
 
   return createdId;

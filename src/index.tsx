@@ -11,6 +11,7 @@ import WeeklyReportDetailPage from './pages/WeeklyReportDetailPage';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { RecoilRoot } from 'recoil';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import CreateFinePage from '@pages/CreateFinePage';
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: 'weekly-reports/:weeklyReportId/close',
         element: <WeeklyReportDetailPage />,
+      },
+      {
+        path: 'fines/new',
+        element: <CreateFinePage />,
       },
     ],
   },

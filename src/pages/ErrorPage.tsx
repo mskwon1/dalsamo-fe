@@ -18,9 +18,9 @@ const ErrorPage = () => {
       }}
     >
       <Result
-        status="404"
-        title="못지나갑니다"
-        subTitle="그런 페이지는 없답니다"
+        status="500"
+        title="뭔가 에러가 났네용 ㅋㅋ"
+        subTitle="개발자한테 연락하면 고쳐줄지도? ㅎㅎ"
       />
     </div>
   );

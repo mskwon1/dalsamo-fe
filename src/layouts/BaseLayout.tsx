@@ -3,6 +3,7 @@ import { Link, Outlet, useLocation } from 'react-router-dom';
 import dalsamoLogo from '../images/dalsamo.png';
 import {
   BarsOutlined,
+  DollarCircleOutlined,
   FileAddOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -25,6 +26,13 @@ const MENU_ROUTES = [
     icon: <FileAddOutlined />,
     title: '주간기록 생성',
     pathname: '/weekly-reports/new',
+    roles: ['admin'],
+  },
+  {
+    key: '3',
+    icon: <DollarCircleOutlined />,
+    title: '벌금 수동 추가',
+    pathname: '/fines/new',
     roles: ['admin'],
   },
 ];
