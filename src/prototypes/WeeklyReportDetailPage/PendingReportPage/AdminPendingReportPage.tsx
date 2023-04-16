@@ -18,7 +18,7 @@ import { RcFile } from 'antd/es/upload';
 import useCloseWeeklyReport from '@hooks/useCloseWeeklyReport';
 import useAuthToken from '@hooks/useAuthToken';
 
-const PendingReportPage = (props: {
+const AdminPendingReportPage = (props: {
   weeklyReport: ComposedWeeklyReportEntity;
 }) => {
   const { weeklyReport } = props;
@@ -248,4 +248,4 @@ const PendingReportPage = (props: {
   );
 };
 
-export default PendingReportPage;
+export default AdminPendingReportPage;

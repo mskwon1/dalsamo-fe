@@ -21,19 +21,43 @@ const requestOpenWeeklyReport = async (
 
 const requestCloseWeeklyReport = async (
   weeklyReportId: string,
-  params: { runEntries: RunEntryEntity[]; base64Image?: string }
+  params: { runEntries: RunEntryEntity[]; base64Image?: string },
+  token: string
 ) => {
   const {
     data: { result },
   } = await ApiRequester.post<{ result: boolean }>(
     `/weekly-reports/${weeklyReportId}/close`,
-    params
+    params,
+    { headers: createAuthHeader(token) }
   );
 
   return result;
 };
 
+const requestUpdateRunEntry = async (
+  key: {
+    weeklyReportId: string;
+    runEntryId: string;
+  },
+  params: { runDistance: number; imageUrls?: string[] },
+  token: string
+) => {
+  const { weeklyReportId, runEntryId } = key;
+
+  const {
+    data: { runEntry },
+  } = await ApiRequester.put<{ runEntry: RunEntryEntity }>(
+    `/run-entries/${runEntryId}`,
+    { ...params, weeklyReportId },
+    { headers: createAuthHeader(token) }
+  );
+
+  return runEntry;
+};
+
 export default {
   requestOpenWeeklyReport,
   requestCloseWeeklyReport,
+  requestUpdateRunEntry,
 };

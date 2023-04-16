@@ -91,7 +91,7 @@ const BaseLayout = () => {
         onCollapse={(value) => setCollapse(value)}
       >
         <div
-          style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+          style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}
         >
           <Link to="/">
             <img src={dalsamoLogo} style={{ width: '100%', height: '100%' }} />

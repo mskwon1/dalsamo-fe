@@ -1,8 +1,10 @@
 import { useParams } from 'react-router-dom';
 import useWeeklyReport from '../hooks/useWeeklyReport';
-import { Col, Row, Skeleton } from 'antd';
-import PendingReportPage from '../prototypes/WeeklyReportDetailPage/PendingReportPage/PendingReportPage';
+import { Skeleton } from 'antd';
+import AdminPendingReportPage from '../prototypes/WeeklyReportDetailPage/PendingReportPage/AdminPendingReportPage';
 import ConfirmedReportPage from '../prototypes/WeeklyReportDetailPage/ConfirmedReportPage';
+import useLoginUser from '@hooks/useLoginUser';
+import MemberPendingReportPage from '@prototypes/WeeklyReportDetailPage/PendingReportPage/MemberPendingReportPage';
 
 const WeeklyReportDetailPage = () => {
   const { weeklyReportId } = useParams();
@@ -10,8 +12,9 @@ const WeeklyReportDetailPage = () => {
   const { data: weeklyReport, isLoading } = useWeeklyReport(
     weeklyReportId as string
   );
+  const { data: user } = useLoginUser();
 
-  if (isLoading || !weeklyReport) {
+  if (isLoading || !weeklyReport || !user) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <Skeleton
@@ -25,7 +28,13 @@ const WeeklyReportDetailPage = () => {
   const { status } = weeklyReport;
 
   if (status === 'pending') {
-    return <PendingReportPage weeklyReport={weeklyReport} />;
+    const { roles } = user;
+
+    if (roles.includes('admin')) {
+      return <AdminPendingReportPage weeklyReport={weeklyReport} />;
+    }
+
+    return <MemberPendingReportPage weeklyReport={weeklyReport} />;
   }
 
   return <ConfirmedReportPage weeklyReport={weeklyReport} />;
