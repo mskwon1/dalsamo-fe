@@ -28,6 +28,7 @@
     "recoil": "^0.7.7",
     "tsconfig-paths-webpack-plugin": "^4.0.1",
     "typescript": "*",
+    "victory": "^36.6.8",
     "web-vitals": "^2.1.0"
   },
   "scripts": {
