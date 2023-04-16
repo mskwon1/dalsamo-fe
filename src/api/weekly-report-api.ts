@@ -21,7 +21,16 @@ const requestOpenWeeklyReport = async (
 
 const requestCloseWeeklyReport = async (
   weeklyReportId: string,
-  params: { runEntries: RunEntryEntity[]; base64Image?: string },
+  params: {
+    runEntries: {
+      id: string;
+      runDistance: number;
+      goalDistance: number;
+      userId: string;
+      userName: string;
+    }[];
+    base64Image?: string;
+  },
   token: string
 ) => {
   const {

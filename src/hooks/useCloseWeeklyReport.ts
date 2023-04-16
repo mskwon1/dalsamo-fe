@@ -1,8 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import weeklyReportApi from '../api/weekly-report-api';
 import { WeeklyReportQueryKey } from '../query-keys';
+import useAuthToken from './useAuthToken';
 
 const useCloseWeeklyReport = (weeklyReportId: string) => {
+  const { authToken } = useAuthToken();
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
@@ -18,7 +20,8 @@ const useCloseWeeklyReport = (weeklyReportId: string) => {
     }) => {
       const success = await weeklyReportApi.requestCloseWeeklyReport(
         weeklyReportId,
-        params
+        params,
+        authToken as string
       );
 
       return success;
