@@ -1,12 +1,13 @@
-import { Button, Image, Table, Typography } from 'antd';
+import { Button, Image, Modal, Table, Typography } from 'antd';
 import BasicInfoSection from './PendingReportPage/BasicInfoSection';
-import { useMemo, useRef } from 'react';
-import { find, map, maxBy, orderBy } from 'lodash';
+import { useMemo, useRef, useState } from 'react';
+import { find, isEmpty, map, maxBy, orderBy } from 'lodash';
 import {
   CaretUpFilled,
   CrownFilled,
   DownloadOutlined,
   LineOutlined,
+  PaperClipOutlined,
 } from '@ant-design/icons';
 import { useCallback } from 'react';
 import html2canvas from 'html2canvas';
@@ -56,122 +57,172 @@ const ConfirmedReportPage = (props: {
     return maxBy(fines, 'value')?.userId;
   }, [fines]);
 
+  const [openModal, setOpenModal] = useState(false);
+  const [modalImages, setModalImages] = useState<string[]>([]);
+
+  const onClickImagesButton = useCallback((imageUrls: string[]) => {
+    setOpenModal(true);
+    setModalImages(imageUrls);
+  }, []);
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-      <div ref={canvasTargetRef} style={{ padding: 4 }}>
-        <Typography.Title level={4} style={{ marginTop: 0 }}>
-          기본 정보
-        </Typography.Title>
-        <BasicInfoSection weeklyReport={weeklyReport} />
+    <>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div ref={canvasTargetRef} style={{ padding: 4 }}>
+          <Typography.Title level={4} style={{ marginTop: 0 }}>
+            기본 정보
+          </Typography.Title>
+          <BasicInfoSection weeklyReport={weeklyReport} />
 
-        <Typography.Title level={4}>결산 결과</Typography.Title>
-        <Table
-          size="small"
-          bordered
-          dataSource={composedRunEntries}
-          columns={[
-            {
-              title: '회원명',
-              key: 'userName',
-              render: (val, entry) => {
-                const isKing = weeklyKingUserId === entry.userId;
+          <Typography.Title level={4}>결산 결과</Typography.Title>
+          <Table
+            size="small"
+            bordered
+            dataSource={composedRunEntries}
+            columns={[
+              {
+                title: '회원명',
+                key: 'userName',
+                render: (val, entry) => {
+                  const isKing = weeklyKingUserId === entry.userId;
 
-                if (isKing) {
+                  if (isKing) {
+                    return (
+                      <span style={{ fontWeight: 'bold' }}>
+                        <CrownFilled
+                          style={{ color: 'gold', marginRight: 4 }}
+                        />
+                        {entry.userName}
+                      </span>
+                    );
+                  }
+
+                  return <span>{entry.userName}</span>;
+                },
+              },
+              {
+                title: '달린거리',
+                render: (val, { runDistance, goalDistance }) => {
                   return (
-                    <span style={{ fontWeight: 'bold' }}>
-                      <CrownFilled style={{ color: 'gold', marginRight: 4 }} />
-                      {entry.userName}
+                    <span
+                      style={
+                        runDistance >= goalDistance
+                          ? {}
+                          : { color: 'blue', fontWeight: 'bold' }
+                      }
+                    >
+                      {runDistance}
                     </span>
                   );
-                }
+                },
+              },
+              {
+                title: '목표거리',
+                dataIndex: 'goalDistance',
+              },
+              {
+                title: '다음목표',
+                render: (val, { runDistance, goalDistance }) => {
+                  if (runDistance < goalDistance) {
+                    return (
+                      <span>
+                        {goalDistance}
+                        <LineOutlined
+                          style={{ marginLeft: 4, color: 'blue' }}
+                        />
+                      </span>
+                    );
+                  }
 
-                return <span>{entry.userName}</span>;
-              },
-            },
-            {
-              title: '달린거리',
-              render: (val, { runDistance, goalDistance }) => {
-                return (
-                  <span
-                    style={
-                      runDistance >= goalDistance
-                        ? {}
-                        : { color: 'blue', fontWeight: 'bold' }
-                    }
-                  >
-                    {runDistance}
-                  </span>
-                );
-              },
-            },
-            {
-              title: '목표거리',
-              dataIndex: 'goalDistance',
-            },
-            {
-              title: '다음목표',
-              render: (val, { runDistance, goalDistance }) => {
-                if (runDistance < goalDistance) {
+                  if (goalDistance >= MAX_DISTANCE) {
+                    return (
+                      <span>
+                        {goalDistance}
+                        <span style={{ marginLeft: 4 }}>😏</span>
+                      </span>
+                    );
+                  }
+
                   return (
                     <span>
-                      {goalDistance}
-                      <LineOutlined style={{ marginLeft: 4, color: 'blue' }} />
+                      {goalDistance + 1}
+                      <CaretUpFilled style={{ marginLeft: 4, color: 'red' }} />
                     </span>
                   );
-                }
-
-                if (goalDistance >= MAX_DISTANCE) {
-                  return (
-                    <span>
-                      {goalDistance}
-                      <span style={{ marginLeft: 4 }}>😏</span>
-                    </span>
+                },
+              },
+              {
+                title: '벌금',
+                dataIndex: 'fine',
+                render: (val, entry) => {
+                  return entry.fine > 0 ? `${entry.fine}원` : '-';
+                },
+              },
+              {
+                title: '이미지',
+                render: (val, entry) => {
+                  return isEmpty(entry.imageUrls) ? (
+                    ''
+                  ) : (
+                    <Button
+                      type="text"
+                      icon={<PaperClipOutlined />}
+                      onClick={() => onClickImagesButton(entry.imageUrls)}
+                    />
                   );
-                }
-
-                return (
-                  <span>
-                    {goalDistance + 1}
-                    <CaretUpFilled style={{ marginLeft: 4, color: 'red' }} />
-                  </span>
-                );
+                },
               },
-            },
-            {
-              title: '벌금',
-              dataIndex: 'fine',
-              render: (val, entry) => {
-                return entry.fine > 0 ? `${entry.fine}원` : '-';
-              },
-            },
-          ]}
-          rowKey="id"
-          pagination={false}
-        />
-      </div>
-      <div
-        style={{
-          display: 'flex',
-          width: '100%',
-          justifyContent: 'end',
-          marginTop: 4,
-        }}
-      >
-        <Button
-          type="primary"
-          icon={<DownloadOutlined />}
-          onClick={downloadAsImage}
+            ]}
+            rowKey="id"
+            pagination={false}
+          />
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            width: '100%',
+            justifyContent: 'end',
+            marginTop: 4,
+          }}
         >
-          이미지로 다운로드
-        </Button>
+          <Button
+            type="primary"
+            icon={<DownloadOutlined />}
+            onClick={downloadAsImage}
+          >
+            이미지로 다운로드
+          </Button>
+        </div>
+        {reportImageUrl && (
+          <>
+            <Typography.Title level={4}>첨부 이미지</Typography.Title>
+            <Image src={reportImageUrl} width={200} />
+          </>
+        )}
       </div>
-      {reportImageUrl && (
-        <>
-          <Typography.Title level={4}>첨부 이미지</Typography.Title>
-          <Image src={reportImageUrl} width={200} />
-        </>
-      )}
-    </div>
+
+      <Modal
+        title="첨부 이미지"
+        open={openModal}
+        onCancel={() => setOpenModal(false)}
+        footer={null}
+      >
+        <Image.PreviewGroup>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 4,
+              alignItems: 'center',
+            }}
+          >
+            {map(modalImages, (url) => (
+              <Image src={url} />
+            ))}
+          </div>
+        </Image.PreviewGroup>
+      </Modal>
+    </>
   );
 };
 
