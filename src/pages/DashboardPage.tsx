@@ -48,6 +48,10 @@ const FineStatusCard = () => {
 
   return (
     <Card>
+      <Card.Meta
+        title="벌금 현황"
+        style={{ textAlign: 'center', marginBottom: 8 }}
+      />
       <VictoryPie
         animate={{ duration: 500 }}
         data={convertedFineStatus}
