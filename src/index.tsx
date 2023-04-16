@@ -12,6 +12,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { RecoilRoot } from 'recoil';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import CreateFinePage from '@pages/CreateFinePage';
+import DashboardPage from '@pages/DashboardPage';
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
     element: <Root />,
     errorElement: <ErrorPage />,
     children: [
+      {
+        path: '/',
+        element: <DashboardPage />,
+      },
       {
         path: 'weekly-reports',
         element: <WeeklyReportListPage />,
