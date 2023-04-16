@@ -218,8 +218,8 @@ const MemberPendingReportPage = (props: {
                 >
                   <div>
                     <PlusOutlined />
-                    <div style={{ marginTop: 8 }}>Upload</div>
                   </div>
+                  <div style={{ marginTop: 8 }}>사진 추가하기</div>
                 </Upload>
                 <div
                   style={{

@@ -189,60 +189,48 @@ const AdminPendingReportPage = (props: {
       {contextHolder}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <h1>{getWeeklyReportTitle(startDate)}</h1>
-        <Row gutter={8}>
-          <Col
-            xs={24}
-            md={16}
-            style={{ display: 'flex', flexDirection: 'column', gap: 8 }}
-          >
-            <BasicInfoSection weeklyReport={weeklyReport} />
-            <RunEntriesSection
-              runEntries={editableRunEntries}
-              onRunDistanceChange={setRunDistance}
-            />
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'end',
-                alignItems: 'middle',
-              }}
+        <BasicInfoSection weeklyReport={weeklyReport} />
+        <RunEntriesSection
+          runEntries={editableRunEntries}
+          onRunDistanceChange={setRunDistance}
+        />
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'end',
+            alignItems: 'middle',
+          }}
+        >
+          <Space.Compact>
+            <Upload
+              accept="image/*"
+              disabled={isAnalyzingCapture}
+              beforeUpload={parseAndAnalyzeCaptureImage}
+              maxCount={1}
+              showUploadList={false}
             >
-              <Space.Compact>
-                <Upload
-                  accept="image/*"
-                  disabled={isAnalyzingCapture}
-                  beforeUpload={parseAndAnalyzeCaptureImage}
-                  maxCount={1}
-                  showUploadList={false}
-                >
-                  <Button
-                    disabled={isAnalyzingCapture}
-                    icon={
-                      isAnalyzingCapture ? (
-                        <LoadingOutlined />
-                      ) : (
-                        <UploadOutlined />
-                      )
-                    }
-                  >
-                    캡쳐 업로드/기록적용
-                  </Button>
-                </Upload>
-                <Button
-                  type="primary"
-                  icon={<CheckCircleOutlined />}
-                  onClick={onClickSubmit}
-                >
-                  결산 완료
-                </Button>
-              </Space.Compact>
-            </div>
-            <ImagePreviewSection
-              base64ImageUrl={base64Image}
-              onRemove={() => setBase64Image(undefined)}
-            />
-          </Col>
-        </Row>
+              <Button
+                disabled={isAnalyzingCapture}
+                icon={
+                  isAnalyzingCapture ? <LoadingOutlined /> : <UploadOutlined />
+                }
+              >
+                캡쳐 업로드/기록적용
+              </Button>
+            </Upload>
+            <Button
+              type="primary"
+              icon={<CheckCircleOutlined />}
+              onClick={onClickSubmit}
+            >
+              결산 완료
+            </Button>
+          </Space.Compact>
+        </div>
+        <ImagePreviewSection
+          base64ImageUrl={base64Image}
+          onRemove={() => setBase64Image(undefined)}
+        />
       </div>
     </>
   );
