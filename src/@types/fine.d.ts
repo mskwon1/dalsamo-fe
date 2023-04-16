@@ -5,3 +5,9 @@ type FineEntity = {
   userName: string;
   value: number;
 };
+
+type FineStatus = {
+  userId: string;
+  userName: string;
+  sum: number;
+};

@@ -19,4 +19,12 @@ const requestCreateFine = async (
   return createdId;
 };
 
-export default { requestCreateFine };
+const requestFineStatus = async () => {
+  const {
+    data: { status },
+  } = await ApiRequester.get<{ status: FineStatus[] }>('/fines/status');
+
+  return status;
+};
+
+export default { requestCreateFine, requestFineStatus };

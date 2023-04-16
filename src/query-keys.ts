@@ -6,3 +6,7 @@ export const WeeklyReportsQueryKey = (params: { limit: number }) => [
 ];
 
 export const LoginUserQueryKey = () => ['login-user'];
+
+export const UserRunEntriesQueryKey = () => ['user-run-entries'];
+
+export const FineStatusQueryKey = () => ['fine-status'];

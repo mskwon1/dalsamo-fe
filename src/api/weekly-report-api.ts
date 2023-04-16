@@ -65,8 +65,18 @@ const requestUpdateRunEntry = async (
   return runEntry;
 };
 
+const requestUserRunEntries = async (token: string) => {
+  const { data: runEntries } = await ApiRequester.get<RunEntryEntity[]>(
+    '/run-entries/me',
+    { headers: createAuthHeader(token) }
+  );
+
+  return runEntries;
+};
+
 export default {
   requestOpenWeeklyReport,
   requestCloseWeeklyReport,
   requestUpdateRunEntry,
+  requestUserRunEntries,
 };
