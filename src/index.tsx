@@ -58,7 +58,9 @@ root.render(
   <React.StrictMode>
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
-        <GoogleOAuthProvider clientId="1078272982167-an324rb6h5v59b2fvnoq5n4a5ph2ijqf.apps.googleusercontent.com">
+        <GoogleOAuthProvider
+          clientId={process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID || ''}
+        >
           <RouterProvider router={router} />
         </GoogleOAuthProvider>
       </QueryClientProvider>
