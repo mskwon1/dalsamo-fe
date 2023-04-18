@@ -66,7 +66,9 @@ const requestUpdateRunEntry = async (
 };
 
 const requestUserRunEntries = async (token: string) => {
-  const { data: runEntries } = await ApiRequester.get<RunEntryEntity[]>(
+  const {
+    data: { runEntries },
+  } = await ApiRequester.get<{ runEntries: RunEntryEntity[] }>(
     '/run-entries/me',
     { headers: createAuthHeader(token) }
   );
