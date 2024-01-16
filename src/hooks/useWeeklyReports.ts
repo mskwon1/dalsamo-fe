@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import ApiRequester from '../libs/api-requester';
 import { WeeklyReportsQueryKey } from '../query-keys';
 
-const useWeeklyReports = (params: { limit: number }) => {
+const useWeeklyReports = (params: { limit: number; season?: string }) => {
   return useQuery(WeeklyReportsQueryKey(params), async () => {
     const {
       data: { weeklyReports },
