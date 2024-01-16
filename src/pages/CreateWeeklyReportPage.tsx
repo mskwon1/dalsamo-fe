@@ -1,4 +1,4 @@
-import { Table, Button, DatePicker, Form, Row, Col } from 'antd';
+import { Table, Button, DatePicker, Form, Row, Col, Select } from 'antd';
 import useUsers from '../hooks/useUsers';
 import { useCallback, useMemo, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
@@ -6,12 +6,23 @@ import weeklyReportApi from '../api/weekly-report-api';
 import { useNavigate } from 'react-router-dom';
 import UserRoleGuard from '@components/UserRoleGuard';
 import useAuthToken from '@hooks/useAuthToken';
+import { DALSAMO_SEASONS } from 'src/constants';
+
+const SEASON_OPTIONS = DALSAMO_SEASONS.map((season) => {
+  return {
+    value: season,
+    label: season,
+  };
+});
+
+const DEFAULT_SEASON = DALSAMO_SEASONS[DALSAMO_SEASONS.length - 1];
 
 const CreateWeeklyReportPage = () => {
   const { authToken } = useAuthToken();
   const { data: users } = useUsers();
 
   const [startDate, setStartDate] = useState<string>('');
+  const [season, setSeason] = useState<string>(DEFAULT_SEASON);
   const [selectedRows, setSelectedRows] = useState<UserEntity[]>([]);
 
   const navigate = useNavigate();
@@ -25,8 +36,12 @@ const CreateWeeklyReportPage = () => {
       return false;
     }
 
+    if (!season) {
+      return false;
+    }
+
     return true;
-  }, [startDate, selectedRows]);
+  }, [startDate, selectedRows, season]);
 
   const onClickSubmit = useCallback(async () => {
     if (!authToken) {
@@ -36,6 +51,7 @@ const CreateWeeklyReportPage = () => {
     const weeklyReportId = await weeklyReportApi.requestOpenWeeklyReport(
       {
         startDate,
+        season,
         runEntries: selectedRows.map((user) => {
           return {
             userId: user.id,
@@ -48,7 +64,7 @@ const CreateWeeklyReportPage = () => {
     );
 
     navigate(`/weekly-reports/${weeklyReportId}`);
-  }, [startDate, selectedRows, navigate, authToken]);
+  }, [startDate, season, selectedRows, navigate, authToken]);
 
   return (
     <UserRoleGuard allowedRoles={['admin']}>
@@ -62,6 +78,15 @@ const CreateWeeklyReportPage = () => {
               style={{ alignSelf: 'start' }}
               format="YYYYMMDD"
               showToday
+            />
+          </Form.Item>
+          <Form.Item label="시즌" colon={false} required={true}>
+            <Select
+              defaultValue={DEFAULT_SEASON}
+              options={SEASON_OPTIONS}
+              value={season}
+              onChange={setSeason}
+              style={{ alignSelf: 'start' }}
             />
           </Form.Item>
           <Form.Item label="대상회원" colon={false} required={true}>

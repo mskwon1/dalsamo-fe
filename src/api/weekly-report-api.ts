@@ -5,6 +5,7 @@ const requestOpenWeeklyReport = async (
   params: {
     startDate: string;
     runEntries: { userId: string; goalDistance: number }[];
+    season: string;
   },
   token: string
 ) => {
