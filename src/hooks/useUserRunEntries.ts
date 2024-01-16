@@ -3,12 +3,13 @@ import { UserRunEntriesQueryKey } from 'src/query-keys';
 import useAuthToken from './useAuthToken';
 import weeklyReportApi from '@api/weekly-report-api';
 
-const useUserRunEntries = () => {
+const useUserRunEntries = (params: { season?: string }) => {
   const { authToken } = useAuthToken();
 
   return useQuery(
-    UserRunEntriesQueryKey(),
-    async () => weeklyReportApi.requestUserRunEntries(authToken as string),
+    UserRunEntriesQueryKey(params),
+    async () =>
+      weeklyReportApi.requestUserRunEntries(params, authToken as string),
     { enabled: !!authToken }
   );
 };

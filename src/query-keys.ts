@@ -7,6 +7,9 @@ export const WeeklyReportsQueryKey = (params: {
 
 export const LoginUserQueryKey = () => ['login-user'];
 
-export const UserRunEntriesQueryKey = () => ['user-run-entries'];
+export const UserRunEntriesQueryKey = (params: { season?: string }) => [
+  'user-run-entries',
+  params,
+];
 
 export const FineStatusQueryKey = () => ['fine-status'];

@@ -1,14 +1,5 @@
-import { Card, Col, Empty, Row, Skeleton, Statistic, Typography } from 'antd';
-import {
-  countBy,
-  filter,
-  isEmpty,
-  map,
-  meanBy,
-  round,
-  size,
-  sumBy,
-} from 'lodash';
+import { Card, Col, Empty, Row, Select, Skeleton, Statistic } from 'antd';
+import { filter, isEmpty, map, meanBy, round, size, sumBy } from 'lodash';
 import useUserRunEntries from '@hooks/useUserRunEntries';
 import useFineStatus from '@hooks/useFineStatus';
 import {
@@ -19,15 +10,20 @@ import {
   VictoryScatter,
 } from 'victory';
 import { PropsWithChildren, useMemo } from 'react';
-import SkeletonAvatar from 'antd/es/skeleton/Avatar';
 import {
   AppstoreOutlined,
-  ArrowDownOutlined,
-  ArrowUpOutlined,
-  DotChartOutlined,
   LineChartOutlined,
   PieChartOutlined,
 } from '@ant-design/icons';
+import { useState } from 'react';
+import { DALSAMO_SEASONS } from 'src/constants';
+
+const SEASON_OPTIONS = DALSAMO_SEASONS.map((season) => {
+  return {
+    value: season,
+    label: season,
+  };
+});
 
 const CardLayout = (props: PropsWithChildren) => {
   return (
@@ -136,7 +132,10 @@ const FineStatusCard = () => {
 };
 
 const RunEntryResultCard = () => {
-  const { data: userRunEntries, isLoading } = useUserRunEntries();
+  const [season, setSeason] = useState(
+    DALSAMO_SEASONS[DALSAMO_SEASONS.length - 1]
+  );
+  const { data: userRunEntries, isLoading } = useUserRunEntries({ season });
 
   const goalDistances = useMemo(() => {
     if (!userRunEntries) {
@@ -175,6 +174,12 @@ const RunEntryResultCard = () => {
           title="기록 추이"
           style={{ textAlign: 'center', marginBottom: 8 }}
         />
+        <Select
+          value={season}
+          onChange={setSeason}
+          style={{ alignSelf: 'end' }}
+          options={SEASON_OPTIONS}
+        />
         <div
           style={{
             display: 'flex',
@@ -195,6 +200,12 @@ const RunEntryResultCard = () => {
       <Card.Meta
         title="기록 추이"
         style={{ textAlign: 'center', marginBottom: 8 }}
+      />
+      <Select
+        value={season}
+        onChange={setSeason}
+        style={{ alignSelf: 'end' }}
+        options={SEASON_OPTIONS}
       />
       {isEmpty(userRunEntries) ? (
         <div
@@ -235,7 +246,10 @@ const RunEntryResultCard = () => {
 };
 
 const RunEntryStatisticCard = () => {
-  const { data: userRunEntries, isLoading } = useUserRunEntries();
+  const [season, setSeason] = useState(
+    DALSAMO_SEASONS[DALSAMO_SEASONS.length - 1]
+  );
+  const { data: userRunEntries, isLoading } = useUserRunEntries({ season });
 
   const totalRunDistance = useMemo(() => {
     if (!userRunEntries) {
@@ -281,6 +295,12 @@ const RunEntryStatisticCard = () => {
   if (isLoading) {
     return (
       <CardLayout>
+        <Select
+          value={season}
+          onChange={setSeason}
+          style={{ alignSelf: 'end' }}
+          options={SEASON_OPTIONS}
+        />
         <div
           style={{
             display: 'flex',
@@ -298,6 +318,12 @@ const RunEntryStatisticCard = () => {
 
   return (
     <CardLayout>
+      <Select
+        value={season}
+        onChange={setSeason}
+        style={{ alignSelf: 'end' }}
+        options={SEASON_OPTIONS}
+      />
       <div
         style={{
           flexGrow: 1,
