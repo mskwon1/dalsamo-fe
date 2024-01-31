@@ -22,6 +22,9 @@ abstract class AbstractDate {
 
   public abstract format(formatString: string): string;
   public abstract toISOString(): string;
+  public abstract toDate(): Date;
+  public abstract toUnixSeconds(): number;
+  public abstract toUnixMilliseconds(): number;
 
   public abstract add(amount: number, unit: DateUnit): AbstractDate;
   public abstract subtract(amount: number, unit: DateUnit): AbstractDate;

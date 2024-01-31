@@ -28,6 +28,15 @@ class StableDate extends AbstractDate {
   public toISOString(): string {
     return this._date.toISOString();
   }
+  public toDate(): Date {
+    return this._date.toDate();
+  }
+  public toUnixSeconds(): number {
+    return this._date.unix();
+  }
+  public toUnixMilliseconds(): number {
+    return this._date.valueOf();
+  }
 
   public add(amount: number, unit: DateUnit): AbstractDate {
     this._date = this._date.add(amount, unit);
