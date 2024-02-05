@@ -30,28 +30,39 @@ abstract class AbstractDate {
   public abstract subtract(amount: number, unit: DateUnit): AbstractDate;
 
   public abstract get utcOffset(): number;
-  public abstract set utcOffset(minutes: number);
+  public abstract setUtcOffset(minute: number): AbstractDate;
 
   public abstract get millisecond(): number;
-  public abstract set millisecond(input: number);
+  public abstract setMillisecond(input: number): AbstractDate;
 
   public abstract get second(): number;
-  public abstract set second(input: number);
+  public abstract setSecond(input: number): AbstractDate;
 
   public abstract get minute(): number;
-  public abstract set minute(input: number);
+  public abstract setMinute(input: number): AbstractDate;
 
   public abstract get hour(): number;
-  public abstract set hour(input: number);
+  public abstract setHour(input: number): AbstractDate;
 
   public abstract get date(): number;
-  public abstract set date(input: number);
+  public abstract setDate(input: number): AbstractDate;
 
   public abstract get month(): number;
-  public abstract set month(input: number);
+  public abstract setMonth(input: number): AbstractDate;
 
   public abstract get year(): number;
-  public abstract set year(input: number);
+  public abstract setYear(input: number): AbstractDate;
+
+  public abstract isSame(compareDate: AbstractDate): boolean;
+  public abstract isBefore(compareDate: AbstractDate): boolean;
+  public abstract isAfter(compareDate: AbstractDate): boolean;
+
+  public isSameOrBefore(compareDate: AbstractDate) {
+    return this.isBefore(compareDate) || this.isSame(compareDate);
+  }
+  public isSameOrAfter(compareDate: AbstractDate) {
+    return this.isAfter(compareDate) || this.isSame(compareDate);
+  }
 }
 
 export default AbstractDate;

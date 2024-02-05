@@ -51,51 +51,61 @@ class StableDate extends AbstractDate {
     return this._date.utcOffset();
   }
 
-  public set utcOffset(minutes: number) {
-    this._date = this._date.utcOffset(minutes);
+  public setUtcOffset(mintues: number) {
+    return new StableDate(this._date.utcOffset(mintues).toDate());
   }
 
   public get millisecond(): number {
     return this._date.millisecond();
   }
-  public set millisecond(input: number) {
-    this._date = this._date.millisecond(input);
+  public setMillisecond(input: number) {
+    return new StableDate(this._date.millisecond(input).toDate());
   }
   public get second(): number {
     return this._date.second();
   }
-  public set second(input: number) {
-    this._date = this._date.second(input);
+  public setSecond(input: number) {
+    return new StableDate(this._date.second(input).toDate());
   }
   public get minute(): number {
     return this._date.minute();
   }
-  public set minute(input: number) {
-    this._date = this._date.minute(input);
+  public setMinute(input: number) {
+    return new StableDate(this._date.minute(input).toDate());
   }
   public get hour(): number {
     return this._date.hour();
   }
-  public set hour(input: number) {
-    this._date = this._date.hour(input);
+  public setHour(input: number) {
+    return new StableDate(this._date.hour(input).toDate());
   }
   public get date(): number {
     return this._date.date();
   }
-  public set date(input: number) {
-    this._date = this._date.date(input);
+  public setDate(input: number) {
+    return new StableDate(this._date.date(input).toDate());
   }
   public get month(): number {
     return this._date.month();
   }
-  public set month(input: number) {
-    this._date = this._date.month(input);
+  public setMonth(input: number) {
+    return new StableDate(this._date.month(input).toDate());
   }
   public get year(): number {
     return this._date.year();
   }
-  public set year(input: number) {
-    this._date = this._date.year(input);
+  public setYear(input: number) {
+    return new StableDate(this._date.year(input).toDate());
+  }
+
+  public isAfter(compareDate: AbstractDate): boolean {
+    return this._date.isAfter(compareDate.toDate());
+  }
+  public isBefore(compareDate: AbstractDate): boolean {
+    return this._date.isAfter(compareDate.toDate());
+  }
+  public isSame(compareDate: AbstractDate): boolean {
+    return this._date.isSame(compareDate.toDate());
   }
 }
 
