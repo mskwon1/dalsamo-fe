@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { UserRunEntriesQueryKey } from 'src/query-keys';
 import useAuthToken from './useAuthToken';
-import weeklyReportApi from '@api/weekly-report-api';
+import weeklyReportApi from '#api/weekly-report-api';
 
 const useUserRunEntries = (params: { season?: string }) => {
   const { authToken } = useAuthToken();

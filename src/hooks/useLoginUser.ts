@@ -1,4 +1,4 @@
-import authApi from '@api/auth-api';
+import authApi from '#api/auth-api';
 import { useQuery } from '@tanstack/react-query';
 import { LoginUserQueryKey } from 'src/query-keys';
 import useAuthToken from './useAuthToken';

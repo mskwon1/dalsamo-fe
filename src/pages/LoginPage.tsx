@@ -1,10 +1,10 @@
 import { Spin, Typography, notification } from 'antd';
 import dalsamoLogo from '../images/dalsamo.png';
 import { GoogleLogin } from '@react-oauth/google';
-import useLoginUser from '@hooks/useLoginUser';
+import useLoginUser from '#hooks/useLoginUser';
 import { useCallback, useEffect } from 'react';
-import authApi from '@api/auth-api';
-import useAuthToken from '@hooks/useAuthToken';
+import authApi from '#api/auth-api';
+import useAuthToken from '#hooks/useAuthToken';
 import { LoadingOutlined } from '@ant-design/icons';
 
 const LoginPage = () => {

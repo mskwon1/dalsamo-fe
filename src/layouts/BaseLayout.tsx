@@ -9,9 +9,9 @@ import {
   MenuUnfoldOutlined,
 } from '@ant-design/icons';
 import { useMemo, useState } from 'react';
-import useLoginUser from '@hooks/useLoginUser';
+import useLoginUser from '#hooks/useLoginUser';
 import _ from 'lodash';
-import useLogout from '@hooks/useLogout';
+import useLogout from '#hooks/useLogout';
 
 const MENU_ROUTES = [
   {

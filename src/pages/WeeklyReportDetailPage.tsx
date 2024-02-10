@@ -3,8 +3,8 @@ import useWeeklyReport from '../hooks/useWeeklyReport';
 import { Skeleton } from 'antd';
 import AdminPendingReportPage from '../prototypes/WeeklyReportDetailPage/PendingReportPage/AdminPendingReportPage';
 import ConfirmedReportPage from '../prototypes/WeeklyReportDetailPage/ConfirmedReportPage';
-import useLoginUser from '@hooks/useLoginUser';
-import MemberPendingReportPage from '@prototypes/WeeklyReportDetailPage/PendingReportPage/MemberPendingReportPage';
+import useLoginUser from '#hooks/useLoginUser';
+import MemberPendingReportPage from '#prototypes/WeeklyReportDetailPage/PendingReportPage/MemberPendingReportPage';
 
 const WeeklyReportDetailPage = () => {
   const { weeklyReportId } = useParams();

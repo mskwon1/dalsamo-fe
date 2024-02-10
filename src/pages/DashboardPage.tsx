@@ -1,7 +1,7 @@
 import { Card, Col, Empty, Row, Select, Skeleton, Statistic } from 'antd';
 import { filter, isEmpty, map, meanBy, round, size, sumBy } from 'lodash';
-import useUserRunEntries from '@hooks/useUserRunEntries';
-import useFineStatus from '@hooks/useFineStatus';
+import useUserRunEntries from '#hooks/useUserRunEntries';
+import useFineStatus from '#hooks/useFineStatus';
 import {
   VictoryAxis,
   VictoryChart,

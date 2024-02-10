@@ -13,10 +13,10 @@ import { useCallback, useState } from 'react';
 import levenshtein from 'js-levenshtein';
 import _ from 'lodash';
 import fp from 'lodash/fp';
-import utilApi from '@api/util-api';
+import utilApi from '#api/util-api';
 import { RcFile } from 'antd/es/upload';
-import useCloseWeeklyReport from '@hooks/useCloseWeeklyReport';
-import useAuthToken from '@hooks/useAuthToken';
+import useCloseWeeklyReport from '#hooks/useCloseWeeklyReport';
+import useAuthToken from '#hooks/useAuthToken';
 
 const AdminPendingReportPage = (props: {
   weeklyReport: ComposedWeeklyReportEntity;

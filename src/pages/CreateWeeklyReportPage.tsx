@@ -4,8 +4,8 @@ import { useCallback, useMemo, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import weeklyReportApi from '../api/weekly-report-api';
 import { useNavigate } from 'react-router-dom';
-import UserRoleGuard from '@components/UserRoleGuard';
-import useAuthToken from '@hooks/useAuthToken';
+import UserRoleGuard from '#components/UserRoleGuard';
+import useAuthToken from '#hooks/useAuthToken';
 import { DALSAMO_SEASONS } from 'src/constants';
 
 const SEASON_OPTIONS = DALSAMO_SEASONS.map((season) => {
