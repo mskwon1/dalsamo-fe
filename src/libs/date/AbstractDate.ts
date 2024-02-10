@@ -44,8 +44,8 @@ abstract class AbstractDate {
     mm: minute, 00-60
     s: second, 0-60
     ss: second, 00-60
-    z: offset from utc +-HH:mm
-    zz: offset from utc +-HHmm
+    Z: offset from utc +-HH:mm
+    ZZ: offset from utc +-HHmm
     A: AM/PM
     a: am/pm
   */
@@ -58,28 +58,52 @@ abstract class AbstractDate {
   public abstract add(amount: number, unit: DateUnit): AbstractDate;
   public abstract subtract(amount: number, unit: DateUnit): AbstractDate;
 
+  /**
+   * @returns utc offset in minutes
+   */
   public abstract get utcOffset(): number;
   public abstract setUtcOffset(minute: number): AbstractDate;
 
   public abstract get millisecond(): number;
+  /**
+   * @param input 0~999
+   */
   public abstract setMillisecond(input: number): AbstractDate;
 
   public abstract get second(): number;
+  /**
+   * @param input 0~59
+   */
   public abstract setSecond(input: number): AbstractDate;
 
   public abstract get minute(): number;
+  /**
+   * @param input 0~59
+   */
   public abstract setMinute(input: number): AbstractDate;
 
   public abstract get hour(): number;
+  /**
+   * @param input 0~59
+   */
   public abstract setHour(input: number): AbstractDate;
 
   public abstract get date(): number;
+  /**
+   * @param input 1~31
+   */
   public abstract setDate(input: number): AbstractDate;
 
   public abstract get month(): number;
+  /**
+   * @param input 1~12
+   */
   public abstract setMonth(input: number): AbstractDate;
 
   public abstract get year(): number;
+  /**
+   * @param input number bigger than 0
+   */
   public abstract setYear(input: number): AbstractDate;
 
   public abstract isSame(compareDate: AbstractDate): boolean;

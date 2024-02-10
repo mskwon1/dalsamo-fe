@@ -41,12 +41,10 @@ class StableDate extends AbstractDate {
   }
 
   public add(amount: number, unit: DateUnit): AbstractDate {
-    this._date = this._date.add(amount, unit);
-    return this;
+    return new StableDate(this._date.add(amount, unit));
   }
   public subtract(amount: number, unit: DateUnit): AbstractDate {
-    this._date = this._date.subtract(amount, unit);
-    return this;
+    return new StableDate(this._date.subtract(amount, unit));
   }
 
   public get utcOffset(): number {
@@ -61,42 +59,71 @@ class StableDate extends AbstractDate {
     return this._date.millisecond();
   }
   public setMillisecond(input: number) {
+    if (input < 0 || input > 999) {
+      throw new RangeError('input must be number between 0 ~ 999');
+    }
+
     return new StableDate(this._date.millisecond(input));
   }
   public get second(): number {
     return this._date.second();
   }
   public setSecond(input: number) {
+    if (input < 0 || input > 59) {
+      throw new RangeError('input must be number between 0 ~ 59');
+    }
+
     return new StableDate(this._date.second(input));
   }
   public get minute(): number {
     return this._date.minute();
   }
   public setMinute(input: number) {
+    if (input < 0 || input > 59) {
+      throw new RangeError('input must be number between 0 ~ 59');
+    }
+
     return new StableDate(this._date.minute(input));
   }
   public get hour(): number {
     return this._date.hour();
   }
   public setHour(input: number) {
+    if (input < 0 || input > 23) {
+      throw new RangeError('input must be number between 0 ~ 23');
+    }
+
     return new StableDate(this._date.hour(input));
   }
   public get date(): number {
     return this._date.date();
   }
   public setDate(input: number) {
+    const daysInMonth = this._date.daysInMonth();
+    if (input < 1 || input > daysInMonth) {
+      throw new RangeError(`input must be number between 1 ~ ${daysInMonth}`);
+    }
+
     return new StableDate(this._date.date(input));
   }
   public get month(): number {
-    return this._date.month();
+    return this._date.month() + 1;
   }
   public setMonth(input: number) {
-    return new StableDate(this._date.month(input));
+    if (input < 1 || input > 12) {
+      throw new RangeError('input must be number between 1 ~ 12');
+    }
+
+    return new StableDate(this._date.month(input - 1));
   }
   public get year(): number {
     return this._date.year();
   }
   public setYear(input: number) {
+    if (input < 0) {
+      throw new RangeError('input must be number bigger than 0');
+    }
+
     return new StableDate(this._date.year(input));
   }
 
@@ -104,7 +131,7 @@ class StableDate extends AbstractDate {
     return this._date.isAfter(compareDate.toDate());
   }
   public isBefore(compareDate: AbstractDate): boolean {
-    return this._date.isAfter(compareDate.toDate());
+    return this._date.isBefore(compareDate.toDate());
   }
   public isSame(compareDate: AbstractDate): boolean {
     return this._date.isSame(compareDate.toDate());
