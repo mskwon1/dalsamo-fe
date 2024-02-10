@@ -1,17 +1,19 @@
 import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import AbstractDate, { DateUnit } from './AbstractDate';
+import AbstractDate, { DateParam, DateUnit } from './AbstractDate';
 
 dayjs.extend(utc);
-
-type DateParam = string | number | Date;
 
 class StableDate extends AbstractDate {
   private _date: Dayjs;
 
-  constructor(dateParam?: DateParam) {
+  constructor(dateParam?: DateParam | Dayjs) {
     super();
     this._date = dayjs(dateParam);
+
+    if (!this._date.isValid()) {
+      throw new TypeError('date input is not valid : ' + dateParam);
+    }
   }
 
   public static override now() {
@@ -19,7 +21,7 @@ class StableDate extends AbstractDate {
   }
 
   public static override utc(dateParam?: DateParam) {
-    return new StableDate(dayjs.utc(dateParam).toDate());
+    return new StableDate(dayjs.utc(dateParam));
   }
 
   public format(formatString: string): string {
@@ -52,50 +54,50 @@ class StableDate extends AbstractDate {
   }
 
   public setUtcOffset(mintues: number) {
-    return new StableDate(this._date.utcOffset(mintues).toDate());
+    return new StableDate(this._date.utcOffset(mintues));
   }
 
   public get millisecond(): number {
     return this._date.millisecond();
   }
   public setMillisecond(input: number) {
-    return new StableDate(this._date.millisecond(input).toDate());
+    return new StableDate(this._date.millisecond(input));
   }
   public get second(): number {
     return this._date.second();
   }
   public setSecond(input: number) {
-    return new StableDate(this._date.second(input).toDate());
+    return new StableDate(this._date.second(input));
   }
   public get minute(): number {
     return this._date.minute();
   }
   public setMinute(input: number) {
-    return new StableDate(this._date.minute(input).toDate());
+    return new StableDate(this._date.minute(input));
   }
   public get hour(): number {
     return this._date.hour();
   }
   public setHour(input: number) {
-    return new StableDate(this._date.hour(input).toDate());
+    return new StableDate(this._date.hour(input));
   }
   public get date(): number {
     return this._date.date();
   }
   public setDate(input: number) {
-    return new StableDate(this._date.date(input).toDate());
+    return new StableDate(this._date.date(input));
   }
   public get month(): number {
     return this._date.month();
   }
   public setMonth(input: number) {
-    return new StableDate(this._date.month(input).toDate());
+    return new StableDate(this._date.month(input));
   }
   public get year(): number {
     return this._date.year();
   }
   public setYear(input: number) {
-    return new StableDate(this._date.year(input).toDate());
+    return new StableDate(this._date.year(input));
   }
 
   public isAfter(compareDate: AbstractDate): boolean {
