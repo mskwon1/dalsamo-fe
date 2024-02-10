@@ -11,7 +11,18 @@ export type DateUnit =
   | 'month'
   | 'year';
 
+export type DateParam = StringDateParam | NumberDateParam | Date;
+
+// expects ISO 8601 datestring
+type StringDateParam = string;
+// unix milliseconds
+type NumberDateParam = number;
+
 abstract class AbstractDate {
+  constructor(dateParam?: DateParam) {
+    // noop
+  }
+
   public static now(): AbstractDate {
     throw new StaticMethodNotImplementedError();
   }
@@ -20,6 +31,24 @@ abstract class AbstractDate {
     throw new StaticMethodNotImplementedError();
   }
 
+  /*
+    YY: two digit year
+    YYYY: four digit year
+    M: month, 1-12
+    MM:  month, 01-12
+    D: date, 1-31
+    DD: date, 01-31
+    H: hour, 1-12
+    HH: hour, 01-12
+    m: minute, 0-60
+    mm: minute, 00-60
+    s: second, 0-60
+    ss: second, 00-60
+    z: offset from utc +-HH:mm
+    zz: offset from utc +-HHmm
+    A: AM/PM
+    a: am/pm
+  */
   public abstract format(formatString: string): string;
   public abstract toISOString(): string;
   public abstract toDate(): Date;
