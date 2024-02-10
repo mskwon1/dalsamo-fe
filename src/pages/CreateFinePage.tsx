@@ -2,10 +2,10 @@ import { Table, Button, Form, InputNumber, Select } from 'antd';
 import useUsers from '../hooks/useUsers';
 import { useCallback, useMemo, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import UserRoleGuard from '@components/UserRoleGuard';
-import fineApi from '@api/fine-api';
+import UserRoleGuard from '#components/UserRoleGuard';
+import fineApi from '#api/fine-api';
 import { head, map, toNumber } from 'lodash';
-import useAuthToken from '@hooks/useAuthToken';
+import useAuthToken from '#hooks/useAuthToken';
 
 const CreateFinePage = () => {
   const { data: users } = useUsers();

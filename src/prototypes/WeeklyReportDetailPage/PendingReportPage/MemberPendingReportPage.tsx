@@ -22,12 +22,12 @@ import {
   slice,
   toNumber,
 } from 'lodash';
-import utilApi from '@api/util-api';
-import useAuthToken from '@hooks/useAuthToken';
-import useLoginUser from '@hooks/useLoginUser';
+import utilApi from '#api/util-api';
+import useAuthToken from '#hooks/useAuthToken';
+import useLoginUser from '#hooks/useLoginUser';
 import { UploadFileStatus } from 'antd/es/upload/interface';
 import { useQueryClient } from '@tanstack/react-query';
-import weeklyReportApi from '@api/weekly-report-api';
+import weeklyReportApi from '#api/weekly-report-api';
 import { WeeklyReportQueryKey } from 'src/query-keys';
 
 const generateRandomUid = () =>

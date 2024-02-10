@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import { MAX_FINE } from './constants';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
+import StableDate from './libs/date/StableDate';
 
 export const calculatePredictedFine = (params: {
   goalDistance: number;
@@ -16,15 +15,13 @@ export const calculatePredictedFine = (params: {
     : 0;
 };
 
-dayjs.extend(utc);
-
 export const getWeeklyReportTitle = (startDate: string) => {
-  const start = dayjs.utc(startDate).format('YYYY년 M월 D일');
-  const end = dayjs.utc(startDate).add(6, 'day').format('YYYY년 M월 D일');
+  const start = StableDate.utc(startDate).format('YYYY년 M월 D일');
+  const end = StableDate.utc(startDate).add(6, 'day').format('YYYY년 M월 D일');
 
   return `${start} ~ ${end} 주간기록`;
 };
 
 export const formatDateString = (dateString: string) => {
-  return dayjs.utc(dateString).format('YYYY년 M월 D일');
+  return StableDate.utc(dateString).format('YYYY년 M월 D일');
 };

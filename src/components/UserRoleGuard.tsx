@@ -1,5 +1,5 @@
 import { AlertFilled, LoadingOutlined } from '@ant-design/icons';
-import useLoginUser from '@hooks/useLoginUser';
+import useLoginUser from '#hooks/useLoginUser';
 import { Result, Spin, Typography } from 'antd';
 import { intersection, isEmpty } from 'lodash';
 import { PropsWithChildren } from 'react';
