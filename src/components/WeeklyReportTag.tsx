@@ -6,14 +6,18 @@ const WeeklyReportTag = (props: { status: 'pending' | 'confirmed' }) => {
 
   if (status === 'pending') {
     return (
-      <Tag color="geekblue-inverse" icon={<ClockCircleOutlined />}>
+      <Tag
+        data-testid="tag"
+        color="geekblue-inverse"
+        icon={<ClockCircleOutlined />}
+      >
         결산 전
       </Tag>
     );
   }
 
   return (
-    <Tag color="green-inverse" icon={<CheckCircleOutlined />}>
+    <Tag data-testid="tag" color="green-inverse" icon={<CheckCircleOutlined />}>
       결산 완료
     </Tag>
   );
