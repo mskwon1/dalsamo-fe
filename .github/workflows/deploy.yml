@@ -2,8 +2,7 @@ name: Run Unit Test
 
 on:
   push:
-    branches:
-      - master
+    branches: [master, dev]
 jobs:
   deploy:
     runs-on: ubuntu-latest
