@@ -1,9 +1,9 @@
-import { AlertFilled, LoadingOutlined } from '@ant-design/icons';
+import { LoadingOutlined } from '@ant-design/icons';
 import useLoginUser from '#hooks/useLoginUser';
 import { Result, Spin, Typography } from 'antd';
 import { intersection, isEmpty } from 'lodash';
 import { PropsWithChildren } from 'react';
-import dalsamoLogo from 'src/images/dalsamo.png';
+import dalsamoLogo from '#images/dalsamo.png';
 
 const UserRoleGuard = ({
   children,

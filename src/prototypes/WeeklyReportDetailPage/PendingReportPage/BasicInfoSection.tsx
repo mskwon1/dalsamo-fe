@@ -1,6 +1,6 @@
 import { Descriptions } from 'antd';
-import WeeklyReportTag from '../../../components/WeeklyReportTag';
-import { formatDateString } from '../../../utils';
+import WeeklyReportTag from '#components/WeeklyReportTag';
+import { formatDateString } from 'src/utils';
 
 const BasicInfoSection = (props: { weeklyReport: WeeklyReportEntity }) => {
   const { weeklyReport } = props;
