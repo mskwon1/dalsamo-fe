@@ -19,5 +19,5 @@ jobs:
     - name: Install dependencies
       run: yarn install
 
-    - name: Test unit
+    - name: Run unit test
       run: yarn test -- --watchAll=false
