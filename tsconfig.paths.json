@@ -8,7 +8,7 @@
       "#images/*": ["src/images/*"],
       "#layouts/*": ["src/layouts/*"],
       "#pages/*": ["src/pages/*"],
-      "#prototypes/*": ["src/prototypes/*"],
+      "#prototypes/*": ["src/prototypes/*"]
     },
   }
 }

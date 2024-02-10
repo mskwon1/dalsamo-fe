@@ -5,7 +5,7 @@ import {
   UploadOutlined,
 } from '@ant-design/icons';
 import ImagePreviewSection from './ImagePreviewSection';
-import { Button, Col, Row, Space, Upload, notification } from 'antd';
+import { Button, Space, Upload, notification } from 'antd';
 import RunEntriesSection from './RunEntriesFormSection';
 import BasicInfoSection from './BasicInfoSection';
 import { calculatePredictedFine, getWeeklyReportTitle } from 'src/utils';

@@ -19,10 +19,6 @@ type StringDateParam = string;
 type NumberDateParam = number;
 
 abstract class AbstractDate {
-  constructor(dateParam?: DateParam) {
-    // noop
-  }
-
   public static now(): AbstractDate {
     throw new StaticMethodNotImplementedError();
   }
